@@ -1,37 +1,37 @@
-﻿@inject HttpClient Http
+﻿@inject IProductService ProductService
 
-<div class="col-12 d-lg-flex">
-	@foreach (var product in Products)
-	{
-		<div class="mb-3 col-12 col-md-6 col-lg-3">
-			<div class="card mb-2" style="width: 18rem;">
-				<img src="@product.ImageUrl" class="card-img-top" alt="...">
-				<div class="card-body">
-					<h5 class="card-title">@product.Title</h5>
-					<p class="card-text">@product.Description</p>
-				</div>
-				<ul class="list-group list-group-flush">
-					<li class="list-group-item">Price: $@product.Price</li>
-					<li class="list-group-item">A second item</li>
-					<li class="list-group-item">A third item</li>
-				</ul>
-				<div class="card-body">
-					<a href="#" class="card-link">Card link</a>
-					<a href="#" class="card-link">Another link</a>
+@if(ProductService.Products == null || ProductService.Products.Count == 0){
+	<span>Loading Products...</span>
+}
+else{
+	<div class="col-12 d-lg-flex">
+		@foreach (var product in ProductService.Products)
+		{
+			<div class="mb-3 col-12 col-md-6 col-lg-3">
+				<div class="card mb-2" style="width: 18rem;">
+					<img src="@product.ImageUrl" class="card-img-top" alt="...">
+					<div class="card-body">
+						<h5 class="card-title">@product.Title</h5>
+						<p class="card-text">@product.Description</p>
+					</div>
+					<ul class="list-group list-group-flush">
+						<li class="list-group-item">Price: $@product.Price</li>
+						<li class="list-group-item">A second item</li>
+						<li class="list-group-item">A third item</li>
+					</ul>
+					<div class="card-body">
+						<a href="#" class="card-link">Card link</a>
+						<a href="#" class="card-link">Another link</a>
+					</div>
 				</div>
 			</div>
-		</div>
-	}
-</div>
+		}
+	</div>
+}
 
 @code {
-	private static List<Product> Products = new List<Product>();
-
 	protected override async Task OnInitializedAsync()
 	{
-		var result = await Http.GetFromJsonAsync<List<Product>>("api/Product");
-		if (result != null){
-			Products = result;
-		}
+		await ProductService.GetProducts();
 	}
 }
