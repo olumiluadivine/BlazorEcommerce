@@ -1,23 +1,26 @@
-﻿<ul class="list-unstyled">
-	@foreach(var product in Products){
-		<li class="media my-3">
-			<div class="media-img-wrapper mr-2">
-				<a href="#">
-					<img class="media-img" src="@product.ImageUrl" alt="@product.Title">
-				</a>
+﻿<div class="col-12 d-flex">
+	@foreach (var product in Products)
+	{
+		<div class="col-3">
+			<div class="card mb-2" style="width: 18rem;">
+				<img src="@product.ImageUrl" class="card-img-top" alt="...">
+				<div class="card-body">
+					<h5 class="card-title">@product.Title</h5>
+					<p class="card-text">@product.Description</p>
+				</div>
+				<ul class="list-group list-group-flush">
+					<li class="list-group-item">Price: $@product.Price</li>
+					<li class="list-group-item">A second item</li>
+					<li class="list-group-item">A third item</li>
+				</ul>
+				<div class="card-body">
+					<a href="#" class="card-link">Card link</a>
+					<a href="#" class="card-link">Another link</a>
+				</div>
 			</div>
-			<div class="media-body">
-				<a href="#">
-					<h4 class="mb-0">
-						@product.Title
-					</h4>
-				</a>
-				<p>@product.Description</p>
-				<h5 class="price">$@product.Price</h5>
-			</div>
-		</li>
+		</div>
 	}
-</ul>
+</div>
 
 @code {
 	private static List<Product> Products = new List<Product>{
