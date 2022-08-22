@@ -25,7 +25,7 @@
                 new Category
                 {
                     Id = 3,
-                    Name = "Vide-Games",
+                    Name = "Video-Games",
                     Url = "video-games"
                 });
 			modelBuilder.Entity<Product>().HasData(
