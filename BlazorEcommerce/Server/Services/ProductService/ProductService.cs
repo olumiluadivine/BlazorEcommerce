@@ -49,17 +49,55 @@
             return response;
         }
 
+        public async Task<ServiceResponse<List<string>>> GetProductSearchSuggestions(string searchText)
+        {
+            var product = await SearchData(searchText);
+
+            List<string> result = new List<string>();
+
+            foreach (var item in product)
+            {
+                if(item.Title.Contains(searchText, StringComparison.OrdinalIgnoreCase))
+                {
+                    result.Add(item.Title);
+                }
+
+                if(item.Description != null)
+                {
+                    var punctuation = item.Description.Where(char.IsPunctuation)
+                        .Distinct().ToArray();
+                    var words = item.Description.Split()
+                        .Select(s=> s.Trim(punctuation));
+                    foreach (var word in words)
+                    {
+                        if(word.Contains(searchText,StringComparison.OrdinalIgnoreCase)
+                            && !result.Contains(word))
+                        {
+                            result.Add(word);
+                        }
+                    }
+                }
+            }
+
+            return new ServiceResponse<List<string>> { Data = result };
+        }
+
         public async Task<ServiceResponse<List<Product>>> SearchProducts(string searchText)
         {
             var response = new ServiceResponse<List<Product>>()
             {
-                Data = await _context.Products
-                .Where(p=>p.Title.ToLower().Contains(searchText.ToLower())
-                || p.Description.ToLower().Contains(searchText.ToLower()))
-                .Include(p=>p.Variants).ToListAsync()
+                Data = await SearchData(searchText)
             };
 
             return response;
+        }
+
+        private async Task<List<Product>> SearchData(string searchText)
+        {
+            return await _context.Products
+                            .Where(p => p.Title.ToLower().Contains(searchText.ToLower())
+                            || p.Description.ToLower().Contains(searchText.ToLower()))
+                            .Include(p => p.Variants).ToListAsync();
         }
     }
 }
